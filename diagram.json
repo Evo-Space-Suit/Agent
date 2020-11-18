@@ -1,0 +1,270 @@
+{
+  "name": "AgentFSMColored",
+  "mode": "T",
+  "data": [
+    {
+      "id": 0,
+      "data": "Setup",
+      "x": 452,
+      "y": 259
+    },
+    {
+      "id": 1,
+      "data": "GetName",
+      "x": 690,
+      "y": 257
+    },
+    {
+      "id": 2,
+      "data": "Main",
+      "x": 980,
+      "y": 265
+    },
+    {
+      "id": 3,
+      "data": "Read",
+      "color": "#5f9ea0",
+      "x": 542,
+      "y": 417
+    },
+    {
+      "id": 4,
+      "data": "Invalid",
+      "color": "#b22222",
+      "x": 681,
+      "y": 418
+    },
+    {
+      "id": 5,
+      "data": "Valid",
+      "color": "#228b22",
+      "x": 843,
+      "y": 424
+    },
+    {
+      "id": 6,
+      "data": "Hi, I'm ESSI, your spacesuit's personal assistant.",
+      "color": "#2f4f4f",
+      "x": 447,
+      "y": 86
+    },
+    {
+      "id": 7,
+      "data": "What's you name?",
+      "color": "#2f4f4f",
+      "x": 688,
+      "y": 83
+    },
+    {
+      "id": 8,
+      "data": "Alright, ask me anything!",
+      "color": "#2f4f4f",
+      "x": 987,
+      "y": 88
+    },
+    {
+      "id": 9,
+      "data": "OnEnter",
+      "color": "#8b008b",
+      "x": 274,
+      "y": 127
+    },
+    {
+      "id": 10,
+      "data": "OnExit",
+      "color": "#4b0082",
+      "x": 266,
+      "y": 199
+    },
+    {
+      "id": 11,
+      "data": "Error",
+      "x": 1230,
+      "y": 259
+    },
+    {
+      "id": 12,
+      "data": "Sorry, I didn't get that, can you reformulate it?",
+      "color": "#2f4f4f",
+      "x": 1231,
+      "y": 83
+    },
+    {
+      "id": 13,
+      "data": "State",
+      "x": 160,
+      "y": 262
+    },
+    {
+      "id": 14,
+      "data": "Message",
+      "x": 161,
+      "y": 82
+    },
+    {
+      "id": 15,
+      "data": "Hook",
+      "x": 159,
+      "y": 172
+    },
+    {
+      "id": 16,
+      "data": "Event",
+      "x": 158,
+      "y": 344
+    }
+  ],
+  "conn": [
+    {
+      "src": 0,
+      "dst": 1
+    },
+    {
+      "src": 1,
+      "dst": 2
+    },
+    {
+      "src": 1,
+      "dst": 1
+    },
+    {
+      "src": 3,
+      "dst": {
+        "src": 0,
+        "dst": 1
+      }
+    },
+    {
+      "src": 4,
+      "dst": {
+        "src": 1,
+        "dst": 1
+      }
+    },
+    {
+      "src": 5,
+      "dst": {
+        "src": 1,
+        "dst": 2
+      }
+    },
+    {
+      "src": 2,
+      "dst": 11
+    },
+    {
+      "src": 11,
+      "dst": 2
+    },
+    {
+      "src": 4,
+      "dst": {
+        "src": 2,
+        "dst": 11
+      }
+    },
+    {
+      "src": 3,
+      "dst": {
+        "src": 11,
+        "dst": 2
+      }
+    },
+    {
+      "src": 14,
+      "dst": 6
+    },
+    {
+      "src": 14,
+      "dst": 7
+    },
+    {
+      "src": 14,
+      "dst": 8
+    },
+    {
+      "src": 14,
+      "dst": 12
+    },
+    {
+      "src": 13,
+      "dst": 0
+    },
+    {
+      "src": 13,
+      "dst": 1
+    },
+    {
+      "src": 13,
+      "dst": 2
+    },
+    {
+      "src": 13,
+      "dst": 11
+    },
+    {
+      "src": 15,
+      "dst": 10
+    },
+    {
+      "src": 15,
+      "dst": 9
+    },
+    {
+      "src": 16,
+      "dst": 3
+    },
+    {
+      "src": 16,
+      "dst": 4
+    },
+    {
+      "src": 16,
+      "dst": 5
+    },
+    {
+      "src": 0,
+      "dst": 6
+    },
+    {
+      "src": 10,
+      "dst": {
+        "src": 0,
+        "dst": 6
+      }
+    },
+    {
+      "src": 1,
+      "dst": 7
+    },
+    {
+      "src": 2,
+      "dst": 8
+    },
+    {
+      "src": 11,
+      "dst": 12
+    },
+    {
+      "src": 9,
+      "dst": {
+        "src": 11,
+        "dst": 12
+      }
+    },
+    {
+      "src": 9,
+      "dst": {
+        "src": 2,
+        "dst": 8
+      }
+    },
+    {
+      "src": 9,
+      "dst": {
+        "src": 1,
+        "dst": 7
+      }
+    }
+  ]
+}
