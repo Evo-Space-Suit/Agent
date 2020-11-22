@@ -6,16 +6,16 @@ class HDict(UserDict):
     def get_info(self, node_ids, *fields):
         if isinstance(node_ids, int):
             node_ids = [node_ids]
-        node_ids = set(node_ids)
 
-        for node in self['data']:
-            if node['id'] in node_ids:
-                if not fields: yield node
-                elif len(fields) == 1: yield node[fields[0]]
-                else: yield tuple(map(node.get, fields))
-
-                node_ids.remove(node['id'])
-                if not node_ids: return
+        for node_id in node_ids:
+            for node in self['data']:
+                if node['id'] == node_id:
+                    if not fields: yield node
+                    elif len(fields) == 1: yield node[fields[0]]
+                    else: yield tuple(map(node.get, fields))
+                    break
+            else:
+                raise KeyError(f"No node in data with id {node_id}.")
 
     def find_nodes(self, data, fits=lambda provided, other: provided == other):
         for node in self['data']:
