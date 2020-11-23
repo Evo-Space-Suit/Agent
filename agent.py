@@ -1,6 +1,8 @@
-from collections import defaultdict
+from HEdit.utils import HDict
 
-from H_utils import load_from_path
+
+def detect_event(user_utterance):
+    raise NotImplementedError()
 
 
 class State:
@@ -23,6 +25,15 @@ class Agent:
         self.name = name
         self.states = []
         self.state = None
+        self.ready = False
+
+    def init(self):
+        if self.state is None:
+            raise ValueError("Please set a start state or import a configuration.")
+        else:
+            print("Agent ready to go.")
+            print(*self.state.hooks['OnEnter'], sep='\n')
+        self.ready = True
 
     @classmethod
     def from_T(cls, T, start_state_name):
@@ -63,8 +74,43 @@ class Agent:
         new_agent.state = states[state_ids.index(start_state_id)]
         return new_agent
 
+    def update(self, e):
+        if not self.ready:
+            raise RuntimeError("Agent not ready, please run init.")
+
+        if e not in self.state.events:
+            print(f"State {self.state.name} is not sensitive for {e}.")
+            return
+
+        possible_indices = self.state.events[e]
+
+        if len(possible_indices) > 1:
+            print(f"Multiple target states not yet implemented (State {self.state.name}, Event {e}).")
+        else:
+            new_state = self.states[possible_indices[0]]
+            print(f"Transitioning to state {new_state.name}")
+            print(*self.state.hooks['OnExit'], sep='\n')
+            self.state = new_state
+            print(*self.state.hooks['OnEnter'], sep='\n')
+
+    def repl(self):
+        if not self.ready:
+            raise RuntimeError("Agent not ready, please run init.")
+
+        for user_utterance in iter(input, ''):
+            if user_utterance.startswith('!'):
+                self.update(user_utterance[1:])
+            elif user_utterance.startswith('>'):
+                print(eval(user_utterance[1:]))
+            else:
+                self.update(detect_event(user_utterance))
+
 
 if __name__ == "__main__":
-    T = load_from_path("diagram.json", mode='T')
+    T = HDict.load_from_path("diagram.json", mode='T')
     agent = Agent.from_T(T, start_state_name="Setup")
-    print(*map(str, agent.states))
+    agent.init()
+    # For now you can go through the states by triggering events.
+    # An event like read message is triggered by !Read.
+    # You can run Python expressions prefixed by >.
+    agent.repl()
