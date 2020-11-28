@@ -41,37 +41,35 @@ class Agent:
         State_id, Message_id, Hook_id, Event_id = map(T.get_node_id, 'State Message Hook Event'.split())
 
         # load states and identify start-state
-        state_ids = list(T.all_children(State_id))
+        state_ids = list(T.connected(State_id))
         start_state_id = T.get_node_id(start_state_name, allowed=state_ids)
 
         # warn about unreachable states
-        unreachable_state_ids = {sid for sid in state_ids if not any(
-                sid in set(T.all_children(sid_)) for sid_ in state_ids if sid != sid_)}
+        unreachable_state_ids = {sid for sid in state_ids if not list(T.connected(sid, direction='incoming'))}
         if unreachable_state_ids - {start_state_id}:
             print(f"State(s) {unreachable_state_ids} are unreachable.")
 
         # build states
-        states = []
-        hook_type_ids = list(T.all_children(Hook_id))
+        new_agent = cls(T['name'])
+        new_agent.states = []
+
+        hook_type_ids = list(T.connected(Hook_id))
         hook_type_names = list(T.get_info(hook_type_ids, 'data'))
 
-        event_type_ids = list(T.all_children(Event_id))
+        event_type_ids = list(T.connected(Event_id))
         event_type_names = list(T.get_info(event_type_ids, 'data'))
 
         for nid, name in T.get_info(state_ids, 'id', 'data'):
-            hooks = {}
-            for hid, hook_name in zip(hook_type_ids, hook_type_names):
-                hooks[hook_name] = list(T.get_info(T.all_children(nid, hid), 'data'))
+            hooks = {hook_name: list(T.get_info(T.connected(nid, hid), 'data'))
+                     for hid, hook_name in zip(hook_type_ids, hook_type_names)}
+            events = {event_name: list(map(state_ids.index, T.get_info(T.connected(nid, eid), 'id')))
+                      for eid, event_name in zip(event_type_ids, event_type_names)}
 
-            events = {}
-            for eid, event_name in zip(event_type_ids, event_type_names):
-                events[event_name] = list(map(state_ids.index, T.get_info(T.all_children(nid, eid), 'id')))
+            state = State(name, hooks, events)
+            new_agent.states.append(state)
 
-            states.append(State(name, hooks, events))
-
-        new_agent = cls(T['name'])
-        new_agent.states = states
-        new_agent.state = states[state_ids.index(start_state_id)]
+            if nid == start_state_id:
+                new_agent.state = state
         return new_agent
 
     def update(self, e):
